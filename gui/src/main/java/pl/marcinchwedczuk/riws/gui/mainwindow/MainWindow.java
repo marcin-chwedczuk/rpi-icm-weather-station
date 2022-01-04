@@ -1,13 +1,18 @@
 package pl.marcinchwedczuk.riws.gui.mainwindow;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import pl.marcinchwedczuk.riws.icm.IcmMeteo;
 import pl.marcinchwedczuk.riws.icm.Util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -33,15 +38,21 @@ public class MainWindow implements Initializable {
     }
 
     @FXML
-    private Label label;
+    private ImageView imgView;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        label.setText(Util.quote("Hello, world!"));
     }
 
     @FXML
-    private void clicked() {
-        label.setText("Clicked!!!");
+    private void loadRIWS() {
+        try {
+            byte[] imageBytes = new IcmMeteo().getMeteoImage();
+            Image img = new Image(new ByteArrayInputStream(imageBytes));
+            imgView.setImage(img);
+        } catch (Exception e) {
+            e.printStackTrace();
+            UiService.infoDialog("ERROR: " + e.getMessage());
+        }
     }
 }
