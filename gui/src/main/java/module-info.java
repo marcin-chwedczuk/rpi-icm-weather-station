@@ -1,12 +1,12 @@
-module pl.marcinchwedczuk.template.gui {
-    requires pl.marcinchwedczuk.template.domain;
+module pl.marcinchwedczuk.riws.gui {
+    requires pl.marcinchwedczuk.riws.icm;
 
     requires javafx.controls;
     requires javafx.fxml;
 
-    exports pl.marcinchwedczuk.template.gui;
-    exports pl.marcinchwedczuk.template.gui.mainwindow;
+    exports pl.marcinchwedczuk.riws.gui;
+    exports pl.marcinchwedczuk.riws.gui.mainwindow;
 
     // Allow @FXML injection to private fields.
-    opens pl.marcinchwedczuk.template.gui.mainwindow;
+    opens pl.marcinchwedczuk.riws.gui.mainwindow;
 }
