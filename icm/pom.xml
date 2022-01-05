@@ -23,10 +23,11 @@
     </properties>
 
     <dependencies>
+        <!-- Modularized dependencies with FAKE versions, see ./modularized directory for details -->
         <dependency>
-            <groupId>org.jsoup</groupId>
+            <groupId>pl.marcinchwedczuk.riws</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.14.3</version>
+            <version>1.0.0</version>
         </dependency>
 
         <!-- Test dependencies -->
