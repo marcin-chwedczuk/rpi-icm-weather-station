@@ -1,16 +1,13 @@
 package pl.marcinchwedczuk.riws.gui.mainwindow;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import pl.marcinchwedczuk.riws.icm.IcmMeteo;
-import pl.marcinchwedczuk.riws.icm.Util;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -48,8 +45,11 @@ public class MainWindow implements Initializable {
     private void loadRIWS() {
         try {
             byte[] imageBytes = new IcmMeteo().getMeteoImage();
+            if (imageBytes == null) return;
+
             Image img = new Image(new ByteArrayInputStream(imageBytes));
-            imgView.setImage(img);
+            Image cropped = MeteoImage.cropToTemperatureAndRainCharts(img);
+            imgView.setImage(cropped);
         } catch (Exception e) {
             e.printStackTrace();
             UiService.infoDialog("ERROR: " + e.getMessage());
