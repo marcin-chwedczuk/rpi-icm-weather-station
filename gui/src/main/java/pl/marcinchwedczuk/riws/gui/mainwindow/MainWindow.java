@@ -1,6 +1,7 @@
 package pl.marcinchwedczuk.riws.gui.mainwindow;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -8,8 +9,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import pl.marcinchwedczuk.riws.icm.IcmMeteo;
 
 import java.io.ByteArrayInputStream;
@@ -33,10 +36,23 @@ public class MainWindow implements Initializable {
             Scene scene = new Scene(loader.load());
             MainWindow controller = (MainWindow) loader.getController();
 
+
             window.initStyle(StageStyle.UNDECORATED);
             window.setTitle("ICM Meteo");
             window.setScene(scene);
             window.setResizable(false);
+
+            if ("KIOSK".equals(System.getenv("RIWS_MODE"))) {
+                window.setFullScreen(true);
+                window.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(WindowEvent event) {
+                        //Handle
+                        event.consume();
+                    }
+                });
+                window.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+            }
 
             window.show();
 
@@ -91,6 +107,7 @@ public class MainWindow implements Initializable {
         executorService.submit(() -> {
             updateRunning.set(true);
             try {
+                System.out.println("Getting new forecast...");
                 byte[] meteoImage = new IcmMeteo().getMeteoImage();
                 if (meteoImage == null) return;
 
@@ -98,6 +115,7 @@ public class MainWindow implements Initializable {
                 Image cropped = MeteoImage.cropToTemperatureRainPressureCharts(img);
 
                 Platform.runLater(() -> {
+                    System.out.println("Setting new forecast in UI...");
                     imgView.setImage(cropped);
                     updateTimeLabel.setText(LocalTime.now().format(HHmm));
                 });
